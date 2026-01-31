@@ -73,6 +73,13 @@ def load_glove_embeddings_gdrive(model_type):
     word_index_temp = "word_index_dict_" + str(model_type) + "_temp.pkl"
     embeddings_temp = "embeddings_" + str(model_type) + "_temp.npy"
 
+    # Check if files exist and are not corrupted (size > 1KB)
+    if (not os.path.exists(word_index_temp) or os.path.getsize(word_index_temp) < 1000 or 
+        not os.path.exists(embeddings_temp) or os.path.getsize(embeddings_temp) < 1000):
+        
+        with st.spinner(f"Downloading GloVe {model_type} files... (This may take a minute)"):
+            download_glove_embeddings_gdrive(model_type)
+
     # Load word index dictionary
     word_index_dict = pickle.load(open(word_index_temp, "rb"), encoding="latin")
 
